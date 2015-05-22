@@ -361,6 +361,7 @@
 				INFOPLIST_FILE = SMARTePARK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -371,6 +372,7 @@
 				INFOPLIST_FILE = SMARTePARK/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -427,6 +429,7 @@
 				5AF513F91B0D79AA005DBD43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5AF513FA1B0D79AA005DBD43 /* Build configuration list for PBXNativeTarget "SMARTePARKTests" */ = {
 			isa = XCConfigurationList;
@@ -435,6 +438,7 @@
 				5AF513FC1B0D79AA005DBD43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

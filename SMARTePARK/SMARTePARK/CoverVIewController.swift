@@ -11,35 +11,25 @@ import MapKit
 
 class CoverVIewController: UIViewController, CLLocationManagerDelegate {
 
-    @IBOutlet var mapView: MKMapView!
-    
-    let locationManager = CLLocationManager()
-    
+    @IBOutlet var logo: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationManager.delegate = self
-        
-        if locationManager.respondsToSelector("requestWhenInUseAuthorization") {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        
-        locationManager.startUpdatingLocation()
+        logo.layer.masksToBounds = true
+        logo.layer.cornerRadius = 50
+        logo.layer.opacity = 0.75
+
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == CLAuthorizationStatus.AuthorizedWhenInUse {
-            mapView.showsUserLocation = true
-        }
-    }
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        
-    }
+
     /*
     // MARK: - Navigation
 
@@ -49,5 +39,8 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    //MARK: - Actions
+    
 
 }

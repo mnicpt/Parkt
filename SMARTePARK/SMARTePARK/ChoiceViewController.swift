@@ -11,7 +11,7 @@ import MapKit
 
 class ChoiceViewController: UIViewController, CLLocationManagerDelegate {
 
-    @IBOutlet var mapView: MKMapView!
+    @IBOutlet weak var mapView: MKMapView!
     
     let locationManager = CLLocationManager()
     
@@ -27,9 +27,40 @@ class ChoiceViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
 
+    override func viewWillDisappear(animated: Bool) {
+        // memory release of tiles trick
+        switch (mapView.mapType) {
+            case MKMapType.Standard:
+                mapView.mapType = MKMapType.Hybrid
+                mapView.mapType = MKMapType.Standard
+            case MKMapType.Hybrid:
+                mapView.mapType = MKMapType.Standard
+                mapView.mapType = MKMapType.Hybrid
+            default:
+                mapView.mapType = MKMapType.Standard
+        }
+        
+        mapView.removeFromSuperview()
+        mapView = nil
+        
+        locationManager.stopUpdatingLocation()
+        
+        super.viewWillDisappear(animated)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        // memory release of tiles trick
+        switch (mapView.mapType) {
+        case MKMapType.Standard:
+            mapView.mapType = MKMapType.Hybrid
+            mapView.mapType = MKMapType.Standard
+        case MKMapType.Hybrid:
+            mapView.mapType = MKMapType.Standard
+            mapView.mapType = MKMapType.Hybrid
+        default:
+            mapView.mapType = MKMapType.Standard
+        }
     }
     
 
@@ -51,4 +82,10 @@ class ChoiceViewController: UIViewController, CLLocationManagerDelegate {
     }
     */
 
+    // MARK: - Actions
+    @IBAction func startOver(sender: AnyObject) {
+        let coverViewController = storyboard?.instantiateViewControllerWithIdentifier( "CoverViewController" ) as! CoverVIewController
+        presentViewController(coverViewController, animated: true, completion: nil)
+    }
+    
 }
