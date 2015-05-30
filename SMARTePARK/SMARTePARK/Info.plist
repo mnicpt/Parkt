@@ -47,7 +47,7 @@
 	<false/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
-	<key>NSLocationUsageDescription</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location Service is required to find parking locations.</string>
 </dict>
 </plist>
