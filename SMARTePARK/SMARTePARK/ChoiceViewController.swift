@@ -105,7 +105,7 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
             
             if locations?.firstObject === listing {
                 parkingName.text = annotation.subtitle
-                parkingAmount.titleLabel?.text = annotation.title
+                parkingAmount.setTitle(annotation.title, forState: .Normal)
             }
             
             mapView.addAnnotation( annotation )
@@ -132,7 +132,7 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
     // MARK: - MKMapViewDelegate
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
         parkingName.text = view.annotation.subtitle
-        parkingAmount.setTitle(view.annotation.title, forState: UIControlState.Normal)
+        parkingAmount.setTitle(view.annotation.title, forState: .Normal)
     }
     
 //    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
