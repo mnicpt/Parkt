@@ -16,6 +16,9 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     @IBOutlet var searchBtn: UIButton!
     @IBOutlet var parkingDatePicker: UIDatePicker!
     @IBOutlet var parkingDate: UIButton!
+    @IBOutlet var parkingTimeLabel: UILabel!
+    @IBOutlet var leavingDatePicker: UIDatePicker!
+    @IBOutlet var leavingDate: UIButton!
     
     let locationManager = CLLocationManager()
     
@@ -68,11 +71,40 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     
     // MARK: - Actions
     @IBAction func dateSelected(sender: UIButton) {
+        leavingDatePicker.hidden = true
         parkingDatePicker.hidden = !parkingDatePicker.hidden
+        
+        if parkingDatePicker.hidden {
+            parkingTimeLabel.hidden = false
+            leavingDate.hidden = false
+            searchBtn.hidden = false
+            
+        } else {
+            parkingTimeLabel.hidden = true
+            leavingDate.hidden = true
+            searchBtn.hidden = true
+        }
+    }
+    
+    @IBAction func leavingDateSelected(sender: UIButton) {
+        searchBtn.setTitle("Search", forState: .Normal)
+        
+        parkingDatePicker.hidden = true
+        leavingDatePicker.hidden = !leavingDatePicker.hidden
+        
+        if leavingDatePicker.hidden {
+            searchBtn.hidden = false
+        } else {
+            searchBtn.hidden = true
+        }
     }
     
     @IBAction func datePickerChanged(sender: UIDatePicker) {
         parkingDate.setTitle(formatDate(sender.date), forState: .Normal)
+    }
+    
+    @IBAction func leavingDateChanged(sender: UIDatePicker) {
+        leavingDate.setTitle(formatDate(sender.date), forState: .Normal)
     }
     
     // MARK: - CLLocationManagerDelegate
@@ -89,13 +121,19 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
         searchBtn.setTitle("Search", forState: .Normal)
     }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        locationTextField.resignFirstResponder()
+        
+        return true
+    }
+    
     // MARK: - Seque
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if CLLocationManager.locationServicesEnabled() {
             if locationTextField.text.isEmpty {
                 ParkService.fetchParkingNow(locationManager.location)
             } else {
-                ParkService.fetchParkingByLocation(locationTextField.text)
+                ParkService.fetchParkingByLocation(locationTextField.text, startDate: parkingDatePicker.date, endDate: leavingDatePicker.date)
             }
         }
     }
@@ -108,4 +146,5 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
         
         return dateFormatter.stringFromDate(date)
     }
+
 }

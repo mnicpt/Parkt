@@ -44,14 +44,15 @@ class ParkService {
         }
     }
     
-    class func fetchParkingByLocation(location: String) {
-        let timestamp = NSDate().timeIntervalSince1970
+    class func fetchParkingByLocation(location: String, startDate: NSDate, endDate: NSDate) {
+        let start = startDate.timeIntervalSince1970
+        let end = endDate.timeIntervalSince1970
         
         let url = NSURL(
             string: buildParkLaterUrl(
                 location,
-                start: Int(timestamp),
-                end: Int(timestamp + 3600)))
+                start: Int(start),
+                end: Int(end)))
         let request = NSURLRequest(URL: url!, cachePolicy: NSURLRequestCachePolicy.UseProtocolCachePolicy, timeoutInterval: 300)
         
         var locations: NSDictionary?
