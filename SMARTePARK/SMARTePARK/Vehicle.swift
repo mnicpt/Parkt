@@ -17,7 +17,19 @@ class Vehicle {
     var vin: String
     var license: String
     
-    init(year: String, make: String, model: String, bodyStyle: String, vin: String, license: String) {
+    init() {
+        self.year = ""
+        self.make = ""
+        self.model = ""
+        self.bodyStyle = ""
+        self.vin = ""
+        self.license = ""
+    }
+    
+    convenience init(year: String, make: String, model: String, bodyStyle: String, vin: String, license: String) {
+        
+        self.init()
+        
         self.year = year
         self.make = make
         self.model = model

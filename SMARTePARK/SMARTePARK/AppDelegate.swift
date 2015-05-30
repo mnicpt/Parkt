@@ -8,6 +8,9 @@
 
 import UIKit
 
+let CURRENT_RESERVATION: String = "current_reservation"
+let PREVIOUS_RESERVATIONS: String = "previous_reservations"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -15,7 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        var userDefaults  = NSUserDefaults.standardUserDefaults()
+        
+        var file = NSBundle.mainBundle().pathForResource("ParkingReservation", ofType: "plist")
+        var currentReservation = NSMutableDictionary(contentsOfFile: file!)
+
+        userDefaults.setObject(currentReservation, forKey: CURRENT_RESERVATION)
+        
+        if userDefaults.objectForKey(PREVIOUS_RESERVATIONS) == nil {
+            userDefaults.setObject(NSMutableArray(), forKey: PREVIOUS_RESERVATIONS)
+        }
+        
         return true
     }
 
@@ -41,6 +54,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    class func currentReservation() -> NSDictionary {
+        return NSUserDefaults.standardUserDefaults().objectForKey(CURRENT_RESERVATION) as! NSDictionary
+    }
+    
+    class func previousReservations() -> NSMutableArray {
+        return NSUserDefaults.standardUserDefaults().mutableArrayValueForKey(PREVIOUS_RESERVATIONS)
+    }
+    
+    class func updateCurrentReservation(key: String, withValue value: AnyObject) {
+        var currentReservation = NSUserDefaults.standardUserDefaults().objectForKey(CURRENT_RESERVATION)?.mutableCopy() as! NSMutableDictionary
+        currentReservation.setObject(value, forKey: key)
+        
+        NSUserDefaults.standardUserDefaults().setObject(currentReservation, forKey: CURRENT_RESERVATION)
+    }
 
 }
 

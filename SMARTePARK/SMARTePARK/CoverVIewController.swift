@@ -42,17 +42,29 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
             locationManager.startUpdatingLocation()
         }
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        locationTextField.text = AppDelegate.currentReservation().objectForKey("search") as! String
+        parkingDate.setTitle(formatDate(AppDelegate.currentReservation().objectForKey("start") as! NSDate), forState: .Normal)
+        parkingDatePicker.date = AppDelegate.currentReservation().objectForKey("start") as! NSDate
+        leavingDate.setTitle(formatDate(AppDelegate.currentReservation().objectForKey("end") as! NSDate), forState: .Normal)
+        leavingDatePicker.date = AppDelegate.currentReservation().objectForKey("end") as! NSDate
+        
+        if locationTextField.text.isEmpty {
+            searchBtn.setTitle("Park Now", forState: .Normal)
+            leavingDate.setTitle("", forState: .Normal)
+            leavingDatePicker.date = NSDate()
+        } else {
+            searchBtn.setTitle("Search", forState: .Normal)
+        }
+    }
 
     override func viewDidDisappear(animated: Bool) {
         locationManager.stopUpdatingLocation()
         
         super.viewDidDisappear(animated)
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        parkingDate.setTitle(formatDate(NSDate()), forState: .Normal)
     }
 
     override func didReceiveMemoryWarning() {
@@ -101,10 +113,14 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     
     @IBAction func datePickerChanged(sender: UIDatePicker) {
         parkingDate.setTitle(formatDate(sender.date), forState: .Normal)
+        
+        AppDelegate.updateCurrentReservation("start", withValue: sender.date)
     }
     
     @IBAction func leavingDateChanged(sender: UIDatePicker) {
         leavingDate.setTitle(formatDate(sender.date), forState: .Normal)
+        
+        AppDelegate.updateCurrentReservation("end", withValue: sender.date)
     }
     
     // MARK: - CLLocationManagerDelegate
@@ -123,6 +139,7 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         locationTextField.resignFirstResponder()
+        AppDelegate.updateCurrentReservation("search", withValue: textField.text)
         
         return true
     }
@@ -133,7 +150,17 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
             if locationTextField.text.isEmpty {
                 ParkService.fetchParkingNow(locationManager.location)
             } else {
-                ParkService.fetchParkingByLocation(locationTextField.text, startDate: parkingDatePicker.date, endDate: leavingDatePicker.date)
+                var endDate: NSDate?
+                
+                if (leavingDate.titleLabel?.text == "") {
+                    endDate = NSCalendar.currentCalendar().dateByAddingUnit(
+                        NSCalendarUnit.CalendarUnitHour,
+                        value: 1,
+                        toDate: NSDate(),
+                        options: NSCalendarOptions.WrapComponents)
+                }
+                
+                ParkService.fetchParkingByLocation(locationTextField.text, startDate: parkingDatePicker.date, endDate: endDate == nil ? leavingDatePicker.date : endDate!)
             }
         }
     }

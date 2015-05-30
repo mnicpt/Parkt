@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string></string>
+	<key>latitiude</key>
+	<integer>0</integer>
+	<key>longitude</key>
+	<integer>0</integer>
+	<key>name</key>
+	<string></string>
+	<key>street</key>
+	<string></string>
+	<key>city</key>
+	<string></string>
+	<key>state</key>
+	<string></string>
+	<key>zip</key>
+	<string></string>
+	<key>start</key>
+	<date>2015-05-30T21:43:46Z</date>
+	<key>end</key>
+	<date>2015-05-30T21:43:52Z</date>
+	<key>price</key>
+	<string></string>
+	<key>vehicleYear</key>
+	<string></string>
+	<key>vehicleModel</key>
+	<string></string>
+	<key>vehicleMake</key>
+	<string></string>
+	<key>vehicleBodyStyle</key>
+	<string></string>
+	<key>vehicleVIN</key>
+	<string></string>
+	<key>vehicleLicense</key>
+	<string></string>
+	<key>search</key>
+	<string></string>
+</dict>
+</plist>

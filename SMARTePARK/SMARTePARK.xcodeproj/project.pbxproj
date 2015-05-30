@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5A1CCCE41B1A135500550439 /* ParkAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1CCCE31B1A135500550439 /* ParkAnnotation.swift */; };
-		5A1CCCE71B1A18C500550439 /* ParkingReservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1CCCE61B1A18C500550439 /* ParkingReservation.swift */; };
 		5A1CCCE91B1A1A5000550439 /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1CCCE81B1A1A5000550439 /* Vehicle.swift */; };
+		5A1CCCEB1B1A662800550439 /* ParkingReservation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A1CCCEA1B1A662800550439 /* ParkingReservation.plist */; };
 		5A4AE96E1B0FBAA000B05827 /* ParkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4AE96D1B0FBAA000B05827 /* ParkService.swift */; };
 		5AAA3A4C1B180B550022E915 /* ImageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAA3A4B1B180B550022E915 /* ImageFactory.swift */; };
 		5AF513DE1B0D79A9005DBD43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF513DD1B0D79A9005DBD43 /* AppDelegate.swift */; };
@@ -36,8 +36,8 @@
 
 /* Begin PBXFileReference section */
 		5A1CCCE31B1A135500550439 /* ParkAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkAnnotation.swift; sourceTree = "<group>"; };
-		5A1CCCE61B1A18C500550439 /* ParkingReservation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingReservation.swift; sourceTree = "<group>"; };
 		5A1CCCE81B1A1A5000550439 /* Vehicle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
+		5A1CCCEA1B1A662800550439 /* ParkingReservation.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ParkingReservation.plist; sourceTree = "<group>"; };
 		5A4AE96D1B0FBAA000B05827 /* ParkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkService.swift; sourceTree = "<group>"; };
 		5AAA3A4B1B180B550022E915 /* ImageFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFactory.swift; sourceTree = "<group>"; };
 		5AF513D81B0D79A9005DBD43 /* SMARTePARK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SMARTePARK.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,8 +79,8 @@
 		5A1CCCE51B1A18A600550439 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				5A1CCCE61B1A18C500550439 /* ParkingReservation.swift */,
 				5A1CCCE81B1A1A5000550439 /* Vehicle.swift */,
+				5A1CCCEA1B1A662800550439 /* ParkingReservation.plist */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -230,6 +230,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1CCCEB1B1A662800550439 /* ParkingReservation.plist in Resources */,
 				5AF513E31B0D79A9005DBD43 /* Main.storyboard in Resources */,
 				5AF513E81B0D79A9005DBD43 /* LaunchScreen.xib in Resources */,
 				5AF513E51B0D79A9005DBD43 /* Images.xcassets in Resources */,
@@ -252,7 +253,6 @@
 			files = (
 				5A1CCCE91B1A1A5000550439 /* Vehicle.swift in Sources */,
 				5AAA3A4C1B180B550022E915 /* ImageFactory.swift in Sources */,
-				5A1CCCE71B1A18C500550439 /* ParkingReservation.swift in Sources */,
 				5A1CCCE41B1A135500550439 /* ParkAnnotation.swift in Sources */,
 				5A4AE96E1B0FBAA000B05827 /* ParkService.swift in Sources */,
 				5AF513FE1B0D88FE005DBD43 /* CoverVIewController.swift in Sources */,
