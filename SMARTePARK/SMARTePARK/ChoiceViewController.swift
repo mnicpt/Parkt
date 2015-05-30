@@ -102,13 +102,15 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
             annotation.coordinate.longitude = listing.objectForKey("lng") as! CLLocationDegrees
             annotation.title = listing.objectForKey("price_formatted") as! String
             annotation.subtitle = listing.objectForKey("location_name") as! String
+
+            mapView.addAnnotation( annotation )
             
             if locations?.firstObject === listing {
+                mapView.selectAnnotation(annotation, animated: true)
+                
                 parkingName.text = annotation.subtitle
                 parkingAmount.setTitle(annotation.title, forState: .Normal)
             }
-            
-            mapView.addAnnotation( annotation )
         }
     }
     
@@ -136,10 +138,11 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
     }
     
 //    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-//        let view = ImageFactory.parkingAnnotationViewWithText(annotation.title!)
-//        view.annotation = annotation
+//        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "parkAnnotationView")
+//        let image = UIImage(named: "logo")
+//        annotationView.image = image
 //        
-//        return view
+//        return annotationView
 //    }
     
     // MARK: - Actions
