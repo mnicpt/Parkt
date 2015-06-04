@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var file = NSBundle.mainBundle().pathForResource("ParkingReservation", ofType: "plist")
         var currentReservation = NSMutableDictionary(contentsOfFile: file!)
+        currentReservation?.setObject(NSDate(), forKey: "start")
+        currentReservation?.setObject(NSDate(), forKey: "end")
 
         userDefaults.setObject(currentReservation, forKey: CURRENT_RESERVATION)
         
@@ -67,6 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         currentReservation.setObject(value, forKey: key)
         
         NSUserDefaults.standardUserDefaults().setObject(currentReservation, forKey: CURRENT_RESERVATION)
+    }
+
+    class func formatDate(date:NSDate) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = .MediumStyle
+        dateFormatter.timeStyle = .ShortStyle
+        
+        return dateFormatter.stringFromDate(date)
     }
 
 }

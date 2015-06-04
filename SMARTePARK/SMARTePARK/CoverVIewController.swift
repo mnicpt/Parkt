@@ -13,19 +13,31 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
 
     @IBOutlet var logo: UIImageView!
     @IBOutlet var locationTextField: UITextField!
+    @IBOutlet var parkNowBtn: UIButton!
+    @IBOutlet var parkLaterBtn: UIButton!
     @IBOutlet var searchBtn: UIButton!
+    @IBOutlet var leaseSpotBtn: UIButton!
     @IBOutlet var parkingDatePicker: UIDatePicker!
     @IBOutlet var parkingDate: UIButton!
-    @IBOutlet var parkingTimeLabel: UILabel!
     @IBOutlet var leavingDatePicker: UIDatePicker!
     @IBOutlet var leavingDate: UIButton!
+    @IBOutlet var parkingDateLabel: UILabel!
+    @IBOutlet var leavingDateLabel: UILabel!
+    @IBOutlet var orLabel: UILabel!
     
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        parkingDatePicker.frame.size = CGSize(width: view.bounds.size.width, height: 0)
+        
+        let nearView = UILabel(frame: CGRect(x: 0, y: 5, width: 50, height: 15))
+        nearView.textColor = UIColor(white: 0.4, alpha: 1.0)
+        nearView.text = " Near: "
+        
+        locationTextField.leftViewMode = UITextFieldViewMode.Always
+        locationTextField.leftView = nearView
+        
+        initView()
         
         logo.layer.masksToBounds = true
         logo.layer.cornerRadius = 30
@@ -46,18 +58,17 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        initView()
+        
         locationTextField.text = AppDelegate.currentReservation().objectForKey("search") as! String
-        parkingDate.setTitle(formatDate(AppDelegate.currentReservation().objectForKey("start") as! NSDate), forState: .Normal)
+        parkingDate.setTitle(AppDelegate.formatDate(AppDelegate.currentReservation().objectForKey("start") as! NSDate), forState: .Normal)
         parkingDatePicker.date = AppDelegate.currentReservation().objectForKey("start") as! NSDate
-        leavingDate.setTitle(formatDate(AppDelegate.currentReservation().objectForKey("end") as! NSDate), forState: .Normal)
+        leavingDate.setTitle(AppDelegate.formatDate(AppDelegate.currentReservation().objectForKey("end") as! NSDate), forState: .Normal)
         leavingDatePicker.date = AppDelegate.currentReservation().objectForKey("end") as! NSDate
         
         if locationTextField.text.isEmpty {
-            searchBtn.setTitle("Park Now", forState: .Normal)
-            leavingDate.setTitle("", forState: .Normal)
+            leavingDate.setTitle("Edit", forState: .Normal)
             leavingDatePicker.date = NSDate()
-        } else {
-            searchBtn.setTitle("Search", forState: .Normal)
         }
     }
 
@@ -87,20 +98,19 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
         parkingDatePicker.hidden = !parkingDatePicker.hidden
         
         if parkingDatePicker.hidden {
-            parkingTimeLabel.hidden = false
+            parkingDate.hidden = false
             leavingDate.hidden = false
+            leavingDateLabel.hidden = false
             searchBtn.hidden = false
-            
         } else {
-            parkingTimeLabel.hidden = true
+            parkingDate.hidden = false
             leavingDate.hidden = true
+            leavingDateLabel.hidden = true
             searchBtn.hidden = true
         }
     }
     
     @IBAction func leavingDateSelected(sender: UIButton) {
-        searchBtn.setTitle("Search", forState: .Normal)
-        
         parkingDatePicker.hidden = true
         leavingDatePicker.hidden = !leavingDatePicker.hidden
         
@@ -112,15 +122,33 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     }
     
     @IBAction func datePickerChanged(sender: UIDatePicker) {
-        parkingDate.setTitle(formatDate(sender.date), forState: .Normal)
+        parkingDate.setTitle(AppDelegate.formatDate(sender.date), forState: .Normal)
         
         AppDelegate.updateCurrentReservation("start", withValue: sender.date)
     }
     
     @IBAction func leavingDateChanged(sender: UIDatePicker) {
-        leavingDate.setTitle(formatDate(sender.date), forState: .Normal)
+        leavingDate.setTitle(AppDelegate.formatDate(sender.date), forState: .Normal)
         
         AppDelegate.updateCurrentReservation("end", withValue: sender.date)
+    }
+    
+    @IBAction func parkLater(sender: AnyObject) {
+        parkNowBtn.hidden = true
+        parkLaterBtn.hidden = true
+        searchBtn.hidden = false
+        leaseSpotBtn.hidden = true
+        
+        orLabel.hidden = true
+        
+        locationTextField.hidden = false
+        parkingDate.hidden = false
+        parkingDateLabel.hidden = false
+        leavingDate.hidden = false
+        leavingDateLabel.hidden = false
+    }
+    
+    @IBAction func leaseMySpot(sender: AnyObject) {
     }
     
     // MARK: - CLLocationManagerDelegate
@@ -134,12 +162,15 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     
     // MARK: - UITextFieldDelegate
     func textFieldDidBeginEditing(textField: UITextField) {
-        searchBtn.setTitle("Search", forState: .Normal)
+        // show previous reservations
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         locationTextField.resignFirstResponder()
-        AppDelegate.updateCurrentReservation("search", withValue: textField.text)
+        
+        if textField.text != "" {
+            AppDelegate.updateCurrentReservation("search", withValue: textField.text)
+        }
         
         return true
     }
@@ -152,7 +183,7 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
             } else {
                 var endDate: NSDate?
                 
-                if (leavingDate.titleLabel?.text == "") {
+                if (leavingDate.titleLabel?.text == "Edit") {
                     endDate = NSCalendar.currentCalendar().dateByAddingUnit(
                         NSCalendarUnit.CalendarUnitHour,
                         value: 1,
@@ -166,12 +197,29 @@ class CoverVIewController: UIViewController, CLLocationManagerDelegate, UITextFi
     }
 
     // MARK: - Private
-    private func formatDate(date:NSDate) -> String {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = .MediumStyle
-        dateFormatter.timeStyle = .ShortStyle
-        
-        return dateFormatter.stringFromDate(date)
+    private func initView() {
+        locationTextField.hidden = true
+        parkingDateLabel.hidden = true
+        leavingDateLabel.hidden = true
+        parkingDate.hidden = true
+        leavingDate.hidden = true
+        searchBtn.hidden = true
+        parkNowBtn.hidden = false
+        parkLaterBtn.hidden = false
+        leaseSpotBtn.hidden = false
+        orLabel.hidden = false
     }
-
+    
+    private func initParkLaterView() {
+        locationTextField.hidden = false
+        parkingDateLabel.hidden = false
+        leavingDateLabel.hidden = false
+        parkingDate.hidden = false
+        leavingDate.hidden = false
+        searchBtn.hidden = false
+        parkNowBtn.hidden = true
+        parkLaterBtn.hidden = true
+        leaseSpotBtn.hidden = true
+        orLabel.hidden = true
+    }
 }

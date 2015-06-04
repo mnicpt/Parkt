@@ -12,10 +12,14 @@ import MapKit
 class ChoiceViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet var parkingInformationView: UIVisualEffectView!
+    
     @IBOutlet var parkingName: UILabel!
     @IBOutlet var parkingAddress: UILabel!
     @IBOutlet var parkingDistance: UILabel!
     @IBOutlet var parkingAmount: UIButton!
+    @IBOutlet var parkingStart: UILabel!
+    @IBOutlet var parkingEnd: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,29 +33,11 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        parkingName.hidden = false
-        parkingAmount.hidden = false
-        parkingAddress.hidden = false
-        parkingDistance.hidden = false
+        parkingStart.text = AppDelegate.formatDate(AppDelegate.currentReservation().objectForKey("start") as! NSDate)
+        parkingEnd.text = AppDelegate.formatDate(AppDelegate.currentReservation().objectForKey("end") as! NSDate)
     }
 
     override func viewWillDisappear(animated: Bool) {
-        // memory release of tiles trick
-        switch mapView.mapType {
-            case MKMapType.Standard:
-                mapView.mapType = MKMapType.Hybrid
-                mapView.mapType = MKMapType.Standard
-            case MKMapType.Hybrid:
-                mapView.mapType = MKMapType.Standard
-                mapView.mapType = MKMapType.Hybrid
-            default:
-                mapView.mapType = MKMapType.Standard
-        }
-        
-        mapView.removeFromSuperview()
-        mapView.delegate = nil
-        mapView = nil
-        
         NSNotificationCenter.defaultCenter().removeObserver(self)
 
         super.viewWillDisappear(animated)
@@ -97,58 +83,68 @@ class ChoiceViewController: UIViewController, MKMapViewDelegate {
         
         for listing in locations! {
             
-            var annotation = MKPointAnnotation()
+            var annotation = ParkAnnotation()
+            annotation.id = listing.objectForKey("location_id") as! Int
+            annotation.name = listing.objectForKey("location_name") as! String
             annotation.coordinate.latitude = listing.objectForKey("lat") as! CLLocationDegrees
             annotation.coordinate.longitude = listing.objectForKey("lng") as! CLLocationDegrees
             annotation.title = listing.objectForKey("price_formatted") as! String
-            annotation.subtitle = listing.objectForKey("location_name") as! String
+            annotation.cost = listing.objectForKey("price_formatted") as! String
+            annotation.distance = listing.objectForKey("distance") as! Int
+            annotation.street = listing.objectForKey("address") as! String
 
             mapView.addAnnotation( annotation )
             
             if locations?.firstObject === listing {
                 mapView.selectAnnotation(annotation, animated: true)
                 
-                parkingName.text = annotation.subtitle
-                parkingAmount.setTitle(annotation.title, forState: .Normal)
+                parkingName.text = annotation.name
             }
         }
+        
+        parkingInformationView.hidden = false
     }
     
     func noParkingFound(notification: NSNotification) {
-        let userInfo: NSDictionary = notification.userInfo!
-        let errorMsg = userInfo.objectForKey("error") as! String
+        var alert = UIAlertController(title: "No Parking Found", message: "Search again?", preferredStyle: UIAlertControllerStyle.Alert)
         
-        if let location = userInfo.objectForKey("location") as? CLLocation {
-            setVisibleArea(location, radius: 2000)
-            
-            var annotation = MKPointAnnotation()
-            annotation.coordinate = location.coordinate
-            mapView.addAnnotation(annotation)
-        }
-        parkingName.text = errorMsg
-        parkingAmount.hidden = true
-        parkingAddress.hidden = true
-        parkingDistance.hidden = true
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { action in
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 
     // MARK: - MKMapViewDelegate
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-        parkingName.text = view.annotation.subtitle
-        parkingAmount.setTitle(view.annotation.title, forState: .Normal)
+        parkingName.text = (view.annotation as! ParkAnnotation).name
+        parkingAddress.text = (view.annotation as! ParkAnnotation).street
+        
+        let distanceInMiles = Float((view.annotation as! ParkAnnotation).distance) * 0.000189394
+        let distance = NSNumberFormatter.localizedStringFromNumber(distanceInMiles, numberStyle: NSNumberFormatterStyle.DecimalStyle)
+        
+
+        parkingDistance.text = distance + " miles"
+        
+        AppDelegate.updateCurrentReservation("name", withValue: (view.annotation as! ParkAnnotation).name)
+        AppDelegate.updateCurrentReservation("street", withValue: (view.annotation as! ParkAnnotation).street)
+        AppDelegate.updateCurrentReservation("distance", withValue: distance + " miles")
     }
     
 //    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
 //        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "parkAnnotationView")
-//        let image = UIImage(named: "logo")
-//        annotationView.image = image
+//        annotationView.backgroundColor = UIColor(red: 75/255, green: 182/255, blue: 33/255, alpha: 1)
+//        annotationView.tintColor = UIColor.whiteColor()
 //        
 //        return annotationView
 //    }
     
     // MARK: - Actions
     @IBAction func startOver(sender: AnyObject) {
-        let coverViewController = storyboard?.instantiateViewControllerWithIdentifier( "CoverViewController" ) as! CoverVIewController
-        presentViewController(coverViewController, animated: true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     //MARK: - Private

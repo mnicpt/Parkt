@@ -16,17 +16,20 @@ class ParkAnnotation: NSObject, MKAnnotation {
     var subtitle: String
     
     // custom properties
-    var id: String
-    var distance: String
+    var id: Int
+    var name: String
+    var street: String
+    var distance: Int
     var cost: String
     
-    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String) {
-        self.coordinate = coordinate
-        self.title = title
-        self.subtitle = subtitle
-        
-        self.id = ""
-        self.distance = ""
+    override init() {
+        self.coordinate = CLLocationCoordinate2D()
+        self.title = ""
+        self.subtitle = ""
+        self.id = 0
+        self.name = ""
+        self.street = ""
+        self.distance = 0
         self.cost = ""
         
         super.init()

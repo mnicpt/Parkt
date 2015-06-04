@@ -38,7 +38,7 @@ class ParkService {
                 if locations?.objectForKey("locations") as? Int > 0 && error == nil {
                     NSNotificationCenter.defaultCenter().postNotificationName(PARKING_FOUND, object: nil, userInfo: locations! as [NSObject : AnyObject])
                 } else {
-                    NSNotificationCenter.defaultCenter().postNotificationName(NO_PARKING_FOUND, object: nil, userInfo: ["error" : "No parking found nearby.", "location" : CLLocationManager().location])
+                    NSNotificationCenter.defaultCenter().postNotificationName(NO_PARKING_FOUND, object: nil, userInfo: ["error" : "No parking found nearby.", "locations" : locations! as [NSObject : AnyObject]])
                 }
             }
         }
@@ -68,8 +68,7 @@ class ParkService {
                     if let errorMsg = locations?.objectForKey("error") as? String {
 
                     } else {
-                        let location = CLLocation(latitude: locations?.objectForKey("lat") as! CLLocationDegrees, longitude: locations?.objectForKey("lng") as! CLLocationDegrees)
-                        NSNotificationCenter.defaultCenter().postNotificationName(NO_PARKING_FOUND, object: nil, userInfo: ["error" : "No parking found nearby.", "location" : location])
+                        NSNotificationCenter.defaultCenter().postNotificationName(NO_PARKING_FOUND, object: nil, userInfo: ["error" : "No parking found nearby.", "locations" : locations! as [NSObject : AnyObject]])
                     }
                 }
             }
